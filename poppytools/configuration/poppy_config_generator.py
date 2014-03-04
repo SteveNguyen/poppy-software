@@ -98,7 +98,7 @@ poppy_config['motors'] = {
       "type": "MX-28",
       "orientation": "direct",
       "offset": 0.0,
-      "angle_limit": [-45, 20 ],
+      "angle_limit": [-45, 15 ],
     },
     "r_hip_y": {
       "id": 23,
@@ -119,7 +119,7 @@ poppy_config['motors'] = {
       "type": "MX-28",
       "orientation": "direct",
       "offset": 0.0,
-      "angle_limit": [-22, 45 ],
+      "angle_limit": [-15, 45 ],
     },
     "l_hip_y": {
       "id": 13,
