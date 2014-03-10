@@ -11,28 +11,6 @@ from poppytools.primitive.safe import ProtectPoppy
 from poppytools.primitive.interaction import SmartCompliance
 from poppytools.primitive.walking import WalkingGaitFromCPGFile
 
-
-#dirty path
-import sys
-sys.path.append('./im_learning')
-# sys.path.append('./librosa')
-# sys.path.append('./audioread')
-
-#Curiosity modules
-from im_learning.environment.toys.discrete_1d_progress import *
-from im_learning.agent import Agent
-from im_learning.agent.config import get_config
-from im_learning.model.i_model import DiscreteProgressInterest
-from im_learning.model.competence import competence_bool
-from im_learning.experiment import Experiment
-
-#Sound analysis modules
-from soundlib.recorder import Recorder
-from soundlib.analyse import spectro
-from soundlib.analyse import Perception
-
-
-
 GROUND_CHOREGRAPHY_MOVES = ['intro',
         'passage_plage',
         'mvt_sable',
@@ -282,87 +260,6 @@ class LeapMotion(pypot.primitive.Primitive):
             mvt = move.Move.load(f)
         return mvt
 
-class LeapMotionCuriosity(LeapMotion):
-    def __init__(self, poppy_robot, move_path='moves', scard=10, mcard=9, sounddict='sounddata/dico.npz'):
-        
-        LeapMotion.__init__(self,poppy_robot,move_path)
-
-        #Sound recorder
-        self.rec = Recorder()
-        self.rec.recording = True
-        #Sound data initialization
-        self.DATA = spectro(self.rec.rate, self.rec.get_data())
-        #Sound features
-        self.Perceipt=Perception.load_fromfile(sounddict)
-        
-        self.m_card = mcard #motor space cardinality
-        self.s_card = scard #sensory space cardinality
-        
-
-        #Configure the curiosity stuff
-        self.myconf = get_config(1, 1, ['discrete', dict(m_card=self.m_card, s_card=self.s_card, lambd = 0.01)], ['discrete_progress', 'goal', dict(x_card=self.s_card, win_size=10, measure = competence_bool)])
-        
-        self.ag = Agent(**self.myconf)
-
-
-        print "CURIOSITY!"
-        
-    def run(self):
-
-        prev_m=0
-        
-        while not(self.should_stop()):
-
-            #let's try to perceive something
-            s=self.Perceipt.perceive(self.DATA)
-            
-            #let's chose an action
-            m=self.ag.produce()
-            
-            #Do we really need this?
-            # if numpy.random.randint(1,4) == 3:
-            #     self.zero_posture()
-            #     continue
-            
-            #We only want m_card primitives in the combination of left and right
-            r=(m[0])//int(numpy.sqrt(self.m_card))+1
-            l=(m[0])%int(numpy.sqrt(self.m_card))+1
-            
-
-            #No need for random, we have curiosity :)
-            left = self.get_motion(MOVES_LEFT + str(int(l)))
-            right = self.get_motion(MOVES_RIGHT + str(int(r)))
-
-            #instruct the system with the motor/sensory
-
-            #test, impose the mapping
-            # if prev_m==0:
-            #     s=numpy.random.randint(4)
-            # elif prev_m==1 or prev_m==2:
-            #     s=4+numpy.random.randint(2) 
-            # else:
-            #     s=prev_m+1
-
-            print "Perceived: %d Produced: %d (%d, %d)"%(s,prev_m,r,l)
-            
-            # self.ag.perceive(numpy.array([m[0],s]))
-            self.ag.perceive(numpy.array([prev_m,s]))
-            prev_m=m[0]
-            
-
-
-            left.start()
-            right.start()
-
-            #get a new sound for the next loop
-            self.DATA = spectro(self.rec.rate, self.rec.get_data())
-            
-            left.wait_to_stop()
-            right.wait_to_stop()
-        
-        
-
-        
 
 class TangoScene(pypot.primitive.LoopPrimitive):
     def __init__(self, poppy_robot, freq=40):
