@@ -17,6 +17,7 @@ from poppytools.primitive.basic import InitRobot, SitPosition, StandPosition
 from poppytools.primitive.interaction import ArmsCompliant, ArmsCopyMotion, SmartCompliance
 from poppytools.primitive.walking import WalkingGaitFromCPGFile
 from poppytools.behavior.idle import HeadOrShake
+from poppytools.primitive.safe import ProtectPoppy 
 
 motor_to_motor = {
     'Head': 'head',
@@ -63,6 +64,8 @@ class RecorderApp(PyQt4.QtGui.QApplication):
         self.poppy.attach_primitive(ArmsCopyMotion(self.poppy, 50), 'arm_copy')
         self.poppy.attach_primitive(HeadOrShake(self.poppy, 10, 1), 'head_tracking')
         self.poppy.attach_primitive(SitPosition(self.poppy), 'sit_position')
+        self.poppy.attach_primitive(ProtectPoppy(self.poppy),'protection')
+        self.poppy.protection.start()
 
         self.rest = self.poppy.init
 
