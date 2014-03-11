@@ -12,7 +12,7 @@ L_THIGH = 0.1813
 
 
 class SagitallHipMotion(pypot.primitive.Primitive):
-    def init(self, robot):
+    def __init__(self, robot):
         pypot.primitive.Primitive.__init__(self, robot)
 
         self._x = 0
@@ -21,7 +21,7 @@ class SagitallHipMotion(pypot.primitive.Primitive):
         self._duration = 1
 
     def run(self):
-        mouv_hip(self.robot, self._x, self._y, self._theta, self.duration)
+        mouv_hip(self.robot, self._x, self._y, self._theta, self._duration)
 
     def mouv_x(self, value):
         self._x += value
