@@ -13,9 +13,14 @@ leapC = LeapMotionCuriosity(poppy)
 stand=StandPosition(poppy)
 sit=SitPosition(poppy)
 
-stand.start()
-sit.start()
 init_sceno.start()
+init_sceno.wait_to_stop()
+
+stand.start()
+stand.wait_to_stop()
+
+sit.start()
+
 leapC.start()
 
 
