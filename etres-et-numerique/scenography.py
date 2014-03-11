@@ -277,7 +277,7 @@ class LeapMotion(pypot.primitive.Primitive):
         return mvt
 
 class LeapMotionCuriosity(LeapMotion):
-    def __init__(self, poppy_robot, move_path='moves', scard=10, mcard=9, sounddict='sounddata/dico.npz'):
+    def __init__(self, poppy_robot, move_path='moves', scard=10, mcard=9, sounddict='sounddata\dico.npz'):
 
         LeapMotion.__init__(self,poppy_robot,move_path)
 
@@ -294,7 +294,7 @@ class LeapMotionCuriosity(LeapMotion):
 
 
         #Configure the curiosity stuff
-        self.myconf = get_config(1, 1, ['discrete', dict(m_card=m_card, s_card=s_card, lambd = 0.01)], ['discrete_progress', 'goal', dict(x_card=s_card, win_size=10, measure = competence_bool)])
+        self.myconf = get_config(1, 1, ['discrete', dict(m_card=self.m_card, s_card=self.s_card, lambd = 0.01)], ['discrete_progress', 'goal', dict(x_card=self.s_card, win_size=10, measure = competence_bool)])
 
 
         self.ag = Agent(**self.myconf)
