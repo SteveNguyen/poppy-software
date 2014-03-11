@@ -13,7 +13,7 @@ class Recorder(Thread):
     #rate = 48000
     record_seconds = 5
 
-    def __init__(self, verbose=False):
+    def __init__(self, device_index, verbose=False):
         super(Recorder, self).__init__()
         self.recording = False
         self.running = True
@@ -22,16 +22,18 @@ class Recorder(Thread):
         self._init_audio()
         self.start()
         self._nerrors = 0  # Count IOErrors
+        self.device_index=device_index
 
     def _init_audio(self):
         self._audio = pyaudio.PyAudio()
-        self.rate = int(self._audio.get_device_info_by_index(0)[
+        self.rate = int(self._audio.get_device_info_by_index(self.device_index)[
                 'defaultSampleRate'])
         self._stream = self._audio.open(
                 format=self.format_,
                 channels=self.channels,
                 rate=self.rate,
                 input=True,
+                input_device_index = self.device_index
                 output=True,
                 frames_per_buffer=self.chunk)
 
