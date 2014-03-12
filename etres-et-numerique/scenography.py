@@ -355,6 +355,7 @@ class LeapMotionCuriosity(LeapMotion):
             left.wait_to_stop()
             right.wait_to_stop()
 
+        self.rec.exit()
 
 
 
