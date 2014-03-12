@@ -282,7 +282,7 @@ class LeapMotionCuriosity(LeapMotion):
         LeapMotion.__init__(self,poppy_robot,move_path)
 
         #Sound recorder
-        self.rec = Recorder()
+        self.rec = Recorder(0)
         self.rec.recording = True
         #Sound data initialization
         self.DATA = spectro(self.rec.rate, self.rec.get_data())
@@ -349,14 +349,14 @@ class LeapMotionCuriosity(LeapMotion):
             left.start()
             right.start()
 
-            #get a new sound for the next loop
-            self.DATA = spectro(self.rec.rate, self.rec.get_data())
 
             left.wait_to_stop()
             right.wait_to_stop()
 
-        self.rec.exit()
+            #get a new sound for the next loop
+            self.DATA = spectro(self.rec.rate, self.rec.get_data())
 
+        self.rec.exit()
 
 
 
