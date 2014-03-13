@@ -45,7 +45,7 @@ class InitMove(pypot.primitive.Primitive):
         self.duration = duration
 
     def run(self):
-        self.poppy_robot.goto_position(self.mvt.get_frame(0), self.duration)
+        self.poppy_robot.goto_position(self.mvt[0], self.duration)
         time.sleep(self.duration)
 
     def teardown(self):
