@@ -3,9 +3,9 @@ import time
 
 import pypot.primitive
 
-TORQUE_MIN = 20
+TORQUE_MIN = 30
 TORQUE_MAX = 95
-MAX_ERROR = 10
+MAX_ERROR = 7
 
 class ProtectPoppy(pypot.primitive.LoopPrimitive):
     def __init__(self, poppy_robot, freq=20):
