@@ -79,7 +79,7 @@ if len(sys.argv) < 3:
 else:
     input_device_index = int(sys.argv[1])
     output_device_index = int(sys.argv[2])
-    
+
 
 print '--- src ---'
 pprint.pprint(devices[input_device_index])
@@ -102,7 +102,7 @@ dst = p.open(format = FORMAT,
                 frames_per_buffer = CHUNK)
 
 
-                
+
 print ""
 src_latency = 1000.0 * dst.get_input_latency()
 buffer_latency = 1000.0 * CHUNK / RATE
