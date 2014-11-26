@@ -1,6 +1,7 @@
 import math
 import numpy
-
+from math import pi
+from numpy import sin, cos, arccos, arcsin, arctan, tan
 import pypot.primitive
 import transformations as tf
 
@@ -44,6 +45,10 @@ COMPENSATE_EPSI = 0.05
 
 COMPENSATE_TIMER = 20
 # COMPENSATE_TIMER=100
+
+
+def cotan(x):
+    return tan(pi / 2.0 - x)
 
 
 class SagitallHipMotion(pypot.primitive.Primitive):
@@ -179,6 +184,27 @@ def cosinus(ampl, t, freq=0.5, phase=0, offset=0):
 
 
 # very quick and dirty
+
+def leg_ik_2d(h, theta):
+
+    # secure h
+    if type(h) == float:
+        h = array([h])
+        h = array([HMAX if i > HMAX else i for i in h])
+
+    cosbeta = (L1 ** 2 + L2 ** 2 - h ** 2) / (2 * L1 * L2)
+
+    # print cosbeta
+
+    beta = arccos(cosbeta)
+    # print "IK ",cosbeta,h,theta,beta
+
+    alpha = pi / 2.0 - beta / 2.0 + \
+        arctan((L2 - L1) / (L2 + L1) * cotan(beta / 2.0)) + theta
+
+    return (alpha, beta)
+
+
 def two_links_ik_2d_cart(z, x, L1, L2):
 
     HMAX = L1 + L2 - 0.005
