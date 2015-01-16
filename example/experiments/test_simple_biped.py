@@ -102,9 +102,10 @@ class Biped(SimpleBipedVrepXp):
         # print self.vrepio.call_remote_api('simxGetJointPosition',
         # self.joint_h['l_hip_roll'])
 
-        self.vrepio.call_remote_api(
-            'simxSetJointTargetPosition', self.joint_h['l_hip_roll'], 10)
-        print self.vrepio.call_remote_api('simxGetJointPosition', self.joint_h['l_hip_roll'])
+        # self.vrepio.call_remote_api(
+        #     'simxSetJointTargetPosition', self.joint_h['l_hip_roll'], 10)
+        # print self.vrepio.call_remote_api('simxGetJointPosition',
+        # self.joint_h['l_hip_roll'])
 
     def run(self):
         self.Init()
@@ -123,6 +124,7 @@ class Biped(SimpleBipedVrepXp):
             # print self.robot.l_hip_roll.present_position
             # time.sleep(0.1)
             # print self.state
+
             if self.state == 0 or self.state == 1:
                 # self.robot.l_leg_h.goal_position = 0.1
                 self.vrepio.call_remote_api(
