@@ -1,0 +1,86 @@
+{
+  "controllers": {
+    "body_controller": {
+      "sync_read": true,
+      "attached_motors": [
+        "r_leg",
+        "l_leg"
+      ],
+      "port": "auto"
+    }
+    },
+  "motorgroups": {
+    "r_leg": [
+      "r_hip_pitch",
+      "r_hip_roll",
+      "r_leg_h"
+    ],
+    "l_leg": [
+      "l_hip_pitch",
+      "l_hip_roll",
+      "l_leg_h"
+    ]
+  },
+  "motors": {
+    "l_hip_pitch": {
+      "offset": 0.0,
+      "type": "MX-64",
+      "id": 1,
+      "angle_limit": [
+        -180,
+        180
+      ],
+      "orientation": "direct"
+    },
+    "r_hip_pitch": {
+      "offset": 0.0,
+      "type": "MX-64",
+      "id": 2,
+      "angle_limit": [
+        -180,
+        180
+      ],
+      "orientation": "direct"
+    },
+    "l_hip_roll": {
+      "offset": 0.0,
+      "type": "MX-64",
+      "id": 3,
+      "angle_limit": [
+        -180,
+        180
+      ],
+      "orientation": "direct"
+    },
+    "r_hip_roll": {
+      "offset": 0.0,
+      "type": "MX-64",
+      "id": 4,
+      "angle_limit": [
+        -180,
+        180
+      ],
+      "orientation": "direct"
+    },
+    "l_leg_h": {
+      "offset": 0.0,
+      "type": "MX-64",
+      "id": 5,
+      "angle_limit": [
+        -1,
+        1
+      ],
+      "orientation": "direct"
+    },
+    "r_leg_h": {
+      "offset": 0.0,
+      "type": "MX-64",
+      "id": 6,
+      "angle_limit": [
+        -1,
+        1
+      ],
+      "orientation": "direct"
+    }
+  }
+}

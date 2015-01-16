@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-########################################################################
+#
 #  File Name	: 'qm_learn_stab.py'
 #  Author	: Steve NGUYEN
 #  Contact      : steve.nguyen@inria.fr
@@ -15,7 +15,7 @@
 #
 #
 #  Notes:	notes
-########################################################################
+#
 
 import random
 import numpy as np
@@ -29,7 +29,7 @@ from pypot.vrep import from_vrep
 
 import pypot.vrep.remoteApiBindings.vrep as vrep
 
-#from poppytools.configuration.config import poppy_config
+# from poppytools.configuration.config import poppy_config
 
 import poppytools.utils.kinematics as kinematics
 import poppytools.utils.min_jerk as min_jerk
@@ -85,6 +85,10 @@ SIGMA_VEL = 0.1
 
 
 # replay data from file
+
+def cost(x, u):
+    return 1.0
+
 
 def online_from_file_ind(filename, qmx, qmy, Xpos, Ypos, Xvel, Yvel, Ux, Uy):
     fd = open(filename, 'r')
@@ -423,12 +427,13 @@ class Stab(PoppyVrepXp):
 
         print 'GOAL', state, statex_d, statey_d, 'U', uix, uiy, utx, uty
 
-        utx = np.random.rand() * (self.Ux.maxs[0] - self.Ux.mins[0]) + \
-            self.Ux.mins[0]
-        uty = np.random.rand() * (self.Uy.maxs[0] - self.Uy.mins[0]) + \
-            self.Uy.mins[0]
+        # utx = np.random.rand() * (self.Ux.maxs[0] - self.Ux.mins[0]) + \
+        #     self.Ux.mins[0]
+        # uty = np.random.rand() * (self.Uy.maxs[0] - self.Uy.mins[0]) + \
+        #     self.Uy.mins[0]
 
-        print 'RAND:', utx, uty
+        # print 'RAND:', utx, uty
+
         return (utx, uty)
 
     # lift the leg and get back to 0
@@ -503,14 +508,18 @@ if __name__ == '__main__':
     U = Distrib(
         'U', [UXCARD, UYCARD], [UXMIN, UYMIN], [UXMAX, UYMAX], [False, False])
 
-    PosVel_PosVelU = CondDistrib('Xpos Ypos Xvel Yvel', 'Xpos Ypos Xvel Yvel Ux Uy', [XCARD, YCARD, DXCARD, DYCARD],
-                                 [XCARD, YCARD, DXCARD, DYCARD, UXCARD, UYCARD])
+    PosVel_PosVelU = CondDistrib(
+        'Xpos Ypos Xvel Yvel', 'Xpos Ypos Xvel Yvel Ux Uy', [
+            XCARD, YCARD, DXCARD, DYCARD],
+        [XCARD, YCARD, DXCARD, DYCARD, UXCARD, UYCARD])
 
-    XPosXVel_XPosXVelUx = CondDistrib('Xpos Xvel', 'Xpos Xvel Ux', [XCARD, DXCARD],
-                                      [XCARD, DXCARD, UXCARD])
+    XPosXVel_XPosXVelUx = CondDistrib(
+        'Xpos Xvel', 'Xpos Xvel Ux', [XCARD, DXCARD],
+        [XCARD, DXCARD, UXCARD])
 
-    YPosYVel_YPosYVelUy = CondDistrib('Ypos Yvel', 'Ypos Yvel Uy', [YCARD, DYCARD],
-                                      [YCARD, DYCARD, UYCARD])
+    YPosYVel_YPosYVelUy = CondDistrib(
+        'Ypos Yvel', 'Ypos Yvel Uy', [YCARD, DYCARD],
+        [YCARD, DYCARD, UYCARD])
 
     Trx = Transition(X, Ux, XPosXVel_XPosXVelUx, None)
     Try = Transition(Y, Uy, YPosYVel_YPosYVelUy, None)
@@ -525,7 +534,8 @@ if __name__ == '__main__':
     quasix.Init()
     quasiy.Init()
 
-    #poppy_qm.online_from_file_ind(sys.argv[1], quasix, quasiy)
+    online_from_file_ind(
+        sys.argv[1], quasix, quasiy, Xpos, Ypos, Xvel, Yvel, Ux, Uy)
 
     xpos = Xpos.Discretize(0.0)
     ypos = Ypos.Discretize(0.05)
@@ -545,21 +555,32 @@ if __name__ == '__main__':
 
     policyy = quasiy.ComputePolicy()
 
+    print distx.reshape((XCARD, DXCARD))
+    print
+    print policyx.reshape((XCARD, DXCARD))
+
+    print
+    print disty.reshape((YCARD, DYCARD))
+    print
+    print policyy.reshape((YCARD, DYCARD))
+
+    # stop
+
     # poppy = from_vrep(poppy_config, '127.0.0.1', 19997, 'poppy-standing-hightorque.ttt',
     # tracked_collisions=['CollisionRFoot', 'CollisionLFoot'])
-
     XP1 = Stab('poppy-standing-hightorque.ttt',
-               tracked_collisions=['CollisionRFoot', 'CollisionLFoot'], gui=False)
+               tracked_collisions=['CollisionRFoot', 'CollisionLFoot'], gui=True)
 
     XP1.start(quasix=quasix, quasiy=quasiy, X=X, Y=Y, Xpos=Xpos,
               Ypos=Ypos, Xvel=Xvel, Yvel=Yvel, Ux=Ux, Uy=Uy)
 
-    XP2 = Stab('poppy-standing-hightorque.ttt',
-               tracked_collisions=['CollisionRFoot', 'CollisionLFoot'], gui=False)
+    # XP2 = Stab('poppy-standing-hightorque.ttt',
+    #            tracked_collisions=['CollisionRFoot', 'CollisionLFoot'],
+    #            gui=False)
 
-    XP2.start(quasix=quasix, quasiy=quasiy, X=X, Y=Y, Xpos=Xpos,
-              Ypos=Ypos, Xvel=Xvel, Yvel=Yvel, Ux=Ux, Uy=Uy)
+    # XP2.start(quasix=quasix, quasiy=quasiy, X=X, Y=Y, Xpos=Xpos,
+    #           Ypos=Ypos, Xvel=Xvel, Yvel=Yvel, Ux=Ux, Uy=Uy)
 
     XP1.wait()
 
-    XP2.wait()
+    # XP2.wait()

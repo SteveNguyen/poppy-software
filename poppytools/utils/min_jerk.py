@@ -34,8 +34,9 @@ class MJTraj():
 
         self.A = np.array([[self.d3, self.d4, self.d5], [
                           3 * self.d2, 4 * self.d3, 5 * self.d4], [6 * duration, 12 * self.d2, 20 * self.d3]])
-        self.B = np.array([final - self.a0 - (self.a1 * duration) - (self.a2 * self.d2),
-                           final_vel - self.a1 - (2 * self.a2 * duration), final_acc - (2 * self.a2)])
+        self.B = np.array(
+            [final - self.a0 - (self.a1 * duration) - (self.a2 * self.d2),
+             final_vel - self.a1 - (2 * self.a2 * duration), final_acc - (2 * self.a2)])
 
         self.X = []
         self.compute()
@@ -52,7 +53,8 @@ class MJTraj():
 
     def getValue(self, t):
         # FIXME: check time range
-        # self.a0 + self.a1 * t + self.a2 * t ** 2 + self.X[0] * t ** 3 + self.X[1] * t ** 4 + self.X[2] * t ** 5
+        # self.a0 + self.a1 * t + self.a2 * t ** 2 + self.X[0] * t ** 3 +
+        # self.X[1] * t ** 4 + self.X[2] * t ** 5
         return self._mygenerator[- 1](t)
         # return self._generator[ - 1](t)
 
@@ -99,7 +101,9 @@ class MJTraj():
             # self.duration = self.duration + othertraj.duration
 
             # self._mygenerator(x) if filter(lambda y: y < self.duration, x) else self.other_gen(x)
-            # self._mygenerator = lambda x: np.piecewise(np.array(x), [np.array(x) < self.duration, np.array(x) >= self.duration ], [self._mygenerator(x), self.other_gen(x)])
+            # self._mygenerator = lambda x: np.piecewise(np.array(x),
+            # [np.array(x) < self.duration, np.array(x) >= self.duration ],
+            # [self._mygenerator(x), self.other_gen(x)])
             l = len(self._generators) - 1
             l1 = len(self.durations) - 1
             l2 = len(othertraj.durations) - 1
@@ -108,7 +112,9 @@ class MJTraj():
             # print "DEBUG ", len(self.durations), self.durations[l]
 
             # tmpgen = lambda x: self.other_gen(x - self.durations[l])
-            # self._mygenerator.append(lambda x: np.piecewise(np.array(x), [np.array(x) < self.durations[l], np.array(x) >= self.durations[l]], [self._mygenerator[l], tmpgen]))
+            # self._mygenerator.append(lambda x: np.piecewise(np.array(x),
+            # [np.array(x) < self.durations[l], np.array(x) >=
+            # self.durations[l]], [self._mygenerator[l], tmpgen]))
 
             tmpA = copy.deepcopy(self)
             tmpA.durations.append(self.durations[l1] + othertraj.durations[l2])
@@ -160,7 +166,8 @@ class MJLegs1D(pypot.primitive.LoopPrimitive):
                     ankle) + self.ankle_offset
 
                 # print self.robot.l_ankle_y.goal_position
-                # self.robot.l_ankle_y.goal_position =  self.robot.l_hip_y.present_position
+                # self.robot.l_ankle_y.goal_position =
+                # self.robot.l_hip_y.present_position
 
             elif self.leg == "right":
                 # print '     RIGHT UPDATE'
@@ -169,7 +176,8 @@ class MJLegs1D(pypot.primitive.LoopPrimitive):
                 self.robot.r_ankle_y.goal_position = np.degrees(
                     ankle) + self.ankle_offset
 
-                # self.robot.r_ankle_y.goal_position =  self.robot.r_hip_y.present_position
+                # self.robot.r_ankle_y.goal_position =
+                # self.robot.r_hip_y.present_position
 
         elif self.elapsed_time > self.mjtraj.durations[- 1]:
             # print '   END', self.elapsed_time, self.mjtraj.durations[ - 1],
@@ -263,7 +271,8 @@ class MJLegs3D(pypot.primitive.LoopPrimitive):
                 # bof
 
                 # print self.robot.l_ankle_y.goal_position
-                # self.robot.l_ankle_y.goal_position =  self.robot.l_hip_y.present_position
+                # self.robot.l_ankle_y.goal_position =
+                # self.robot.l_hip_y.present_position
 
             elif self.leg == "right":
 
@@ -273,7 +282,8 @@ class MJLegs3D(pypot.primitive.LoopPrimitive):
                 self.robot.r_hip_x.goal_position = np.degrees(phi)
                 # self.robot.r_ankle_y.goal_position = np.degrees(ankle)
 
-                # self.robot.r_ankle_y.goal_position =  self.robot.r_hip_y.present_position
+                # self.robot.r_ankle_y.goal_position =
+                # self.robot.r_hip_y.present_position
 
         elif self.elapsed_time > self.ztraj.durations[- 1]:
             # print '   END', self.elapsed_time, self.mjtraj.durations[ - 1],
@@ -404,7 +414,8 @@ class MJLegs3DSym(pypot.primitive.LoopPrimitive):
                 self.robot.r_hip_x.goal_position = np.degrees(- phi)
 
                 # print self.robot.l_ankle_y.goal_position
-                # self.robot.l_ankle_y.goal_position =  self.robot.l_hip_y.present_position
+                # self.robot.l_ankle_y.goal_position =
+                # self.robot.l_hip_y.present_position
 
             elif self.leg == "right":
 
@@ -421,7 +432,8 @@ class MJLegs3DSym(pypot.primitive.LoopPrimitive):
                 self.robot.l_hip_y.goal_position = np.degrees(theta)
                 self.robot.l_hip_x.goal_position = np.degrees(- phi)
 
-                # self.robot.r_ankle_y.goal_position =  self.robot.r_hip_y.present_position
+                # self.robot.r_ankle_y.goal_position =
+                # self.robot.r_hip_y.present_position
 
         elif self.elapsed_time > self.ztraj.durations[- 1]:
             # print '   END', self.elapsed_time, self.mjtraj.durations[ - 1],
@@ -568,7 +580,8 @@ class MJLegsUp3D(pypot.primitive.LoopPrimitive):
                 # self.robot.r_hip_x.goal_position = 0.0
 
                 # print self.robot.l_ankle_y.goal_position
-                # self.robot.l_ankle_y.goal_position =  self.robot.l_hip_y.present_position
+                # self.robot.l_ankle_y.goal_position =
+                # self.robot.l_hip_y.present_position
 
             elif self.leg == "right":
 
@@ -590,7 +603,8 @@ class MJLegsUp3D(pypot.primitive.LoopPrimitive):
                 # self.robot.l_hip_x.goal_position = np.degrees(- phi)
                 # self.robot.l_ankle_y.goal_position = np.degrees(theta)
 
-                # self.robot.r_ankle_y.goal_position =  self.robot.r_hip_y.present_position
+                # self.robot.r_ankle_y.goal_position =
+                # self.robot.r_hip_y.present_position
 
         elif self.elapsed_time > self.ztraj.durations[- 1]:
             # print '   END', self.elapsed_time, self.mjtraj.durations[ - 1],
@@ -712,12 +726,17 @@ class MJLegsDown3D(pypot.primitive.LoopPrimitive):
                 self.robot.l_ankle_y.goal_position = self.lankley_off + \
                     np.degrees(ankle)  # hum bof
 
-                self.robot.r_hip_y.goal_position = np.degrees(theta)
-                self.robot.r_hip_x.goal_position = np.degrees(- phi)
+                # self.robot.r_hip_y.goal_position = np.degrees(theta)
+                # self.robot.r_hip_x.goal_position = np.degrees(- phi)
+
+                self.robot.r_hip_y.goal_position = self.rhipy_off + \
+                    np.degrees(hip)
+                self.robot.r_hip_x.goal_position = self.rhipx_off + \
+                    np.degrees(- phi)
 
                 # print self.robot.l_ankle_y.goal_position
-                # self.robot.l_ankle_y.goal_position =  self.robot.l_hip_y.present_position
-
+                # self.robot.l_ankle_y.goal_position =
+                # self.robot.l_hip_y.present_position
             elif self.leg == "right":
 
                 # print '     RIGHT UPDATE'
@@ -730,10 +749,16 @@ class MJLegsDown3D(pypot.primitive.LoopPrimitive):
                 self.robot.r_ankle_y.goal_position = self.rankley_off + \
                     np.degrees(ankle)
 
-                self.robot.l_hip_y.goal_position = np.degrees(theta)
-                self.robot.l_hip_x.goal_position = np.degrees(- phi)
+                # self.robot.l_hip_y.goal_position = np.degrees(theta)
+                # self.robot.l_hip_x.goal_position = np.degrees(- phi)
 
-                # self.robot.r_ankle_y.goal_position =  self.robot.r_hip_y.present_position
+                self.robot.l_hip_y.goal_position = self.lhipy_off + \
+                    np.degrees(hip)
+                self.robot.l_hip_x.goal_position = self.lhipx_off + \
+                    np.degrees(- phi)
+
+                # self.robot.r_ankle_y.goal_position =
+                # self.robot.r_hip_y.present_position
 
         elif self.elapsed_time > self.ztraj.durations[- 1]:
             # print '   END', self.elapsed_time, self.mjtraj.durations[ - 1],
@@ -1054,7 +1079,8 @@ class FeetReflex(pypot.primitive.LoopPrimitive):
             MJLegs1D(self.robot, "right", self.mj3, 0), 'mjrightupdown')
 
         # self.robot.attach_primitive(goto_mjtraj(self.robot, {'l_ankle_y': self.mjf3}), 'mjleftupdown')
-        # self.robot.attach_primitive(goto_mjtraj(self.robot, {'r_ankle_y': self.mjf3}), 'mjrightupdown')
+        # self.robot.attach_primitive(goto_mjtraj(self.robot, {'r_ankle_y':
+        # self.mjf3}), 'mjrightupdown')
 
         # self.X_COM = 0.028
         # self.FREQ = 1.116
@@ -1064,7 +1090,8 @@ class FeetReflex(pypot.primitive.LoopPrimitive):
 
         self.robot.attach_primitive(
             kinematics.MoveGprojOSC(robot, self.X_COM, self.FREQ), 'gsin')
-        # self.robot.attach_primitive(kinematics.MoveGprojSin(robot, self.X_COM, self.FREQ), 'gsin')
+        # self.robot.attach_primitive(kinematics.MoveGprojSin(robot,
+        # self.X_COM, self.FREQ), 'gsin')
         self.robot.gsin.start()
 
     def update(self):
@@ -1073,7 +1100,8 @@ class FeetReflex(pypot.primitive.LoopPrimitive):
         # if self.robot.footreact.rosc:
         if self.robot.gsin.right:
             print '\tRIGHT UP'
-            # self.robot.goto_position({'l_hip_y': 3.0,'r_hip_y': 0.0 }, 0.1, wait = False)
+            # self.robot.goto_position({'l_hip_y': 3.0,'r_hip_y': 0.0 }, 0.1,
+            # wait = False)
 
             # self.robot.mjrightupdown.start()
             self.robot.mjleftupdown.start()
